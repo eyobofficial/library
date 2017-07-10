@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>{% if page_title %} {{ page_title }} - {% endif %} Local Library</title>{% endblock title %}
+
+{% block main %}
+<div class="row">
+    <section class="col right-col col-sm-8">
+        <article>
+            <h2>Welcome To Orit Local Library</h2>
+            <p>Local library a small django web app tutorial for mananging books in the imaginary local library.</p>
+        </article>
+
+        <article>
+            <h2>Catalog</h2>
+            <ul class="list-unstyle">
+                <li><strong>Books: </strong> <em>{{ book_count }}</em></li>
+                <li><strong>Copies: </strong> <em>{{ copies_count }}</em></li>
+                <li><strong>Available: </strong> <em>{{ available_count }}</em></li>
+                <li><strong>Authors: </strong> <em>{{ author_count }}</em></li>
+                <li><strong>You have visited this site</strong><em> {{ visit_count}}</em> times before!</li>
+            </ul>
+        </article>
+        
+    </section><!-- /END .right-col -->
+
+    <aside class="col-sm-4 left-col col">
+        
+    </aside>
+</div><!-- /END .row -->
+{% endblock main %}

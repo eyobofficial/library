@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+<div class="row">
+    <div class="col-sm-8">
+        <h2>Contact Us</h2>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Dolorem, quidem atque voluptatibus, asperiores assumenda ullam veniam! Soluta minus, non dolor provident, enim ut eaque odio sit iste ea molestias rem.</p>        
+    </div><!-- /.col-sm-8 -->
+
+    <div class="col-sm-4">
+        {% if success_message %}
+            {{ success_message }}
+        {% endif %}
+        <form action="{% url 'catalog:contact' %}" method="POST">
+        {% csrf_token %}
+        {{ form|crispy }}
+
+        <div class="form-group">
+            <input type="submit" name="submit" value="Send" class="btn btn-success">
+        </div>
+        </form>
+    </div><!-- /.col-sm-4 -->
+</div><!-- /.row -->
+
+
+{% endblock %}

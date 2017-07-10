@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h4 class="text-center text-uppercase">List of Borrowed Books</h4>
+{% if object_list %}
+    <div class="row">
+    {% for copy in object_list %}
+    <div class="col-sm-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                Title: {{ copy.book.title|capfirst }}
+            </div><!-- /END .panel-heading -->
+
+            <div class="panel-body">
+                <p><strong>Copy ID: </strong> {{ copy.id }}</p>
+                <p><strong>Due Back: </strong>{% if copy.is_overdue %} <span class="text-danger">OVERDUE</span>{% else %} {{ copy.due_back|date:'M d, Y' }} {% endif %}</p>
+                <p><strong>Borrowed By: </strong>{{ copy.borrower.username|capfirst }}</p>
+            </div>
+        </div>
+    </div><!-- /.col-sm-4 -->
+    {% endfor %}
+
+    {% if is_paginated %}
+    <ul class="pagination">
+        {% for page_num in page_obj.paginator.page_range %}
+        <li {% if page_num == page_obj.number %} class="active" {% endif %}>
+            <a href="{{ request.path }}?page={{ page_num }}">{{ page_num }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+{% else %}
+   <p><span class="glyphicon glyphicon-info-sign"></span> No book is currently loaned to you!</p>
+{% endif %}
+</div>
+{% endblock main %}

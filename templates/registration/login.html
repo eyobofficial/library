@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="row">
+    <section class="col-sm-4 col-sm-offset-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h2 class="h4 text-center">Login</h2>
+            </div>
+
+            <div class="panel-body">
+                {% if form.errors %}
+                <p>Username and Password does not match. Please try again!</p>
+                {% endif %}
+
+                {% if next %}
+                    {% if user.is_authenticated %}
+                    <p>Your account doesn't have access to this page. To proceed, please login with an account that has access.</p>
+                    {% else %}
+                    <p>Please login to see this page</p>
+                    {% endif %}
+                {% endif %}
+
+                <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <table>
+                    {{ form.as_table }}
+                </table>
+                <div class="form-group">
+                    <input type="submit" value="login" class="btn btn-sm btn-success">
+                    <input type="hidden" name="next" value="{{ next }}">
+                </div>
+                </form>
+            </div><!-- /END .panel-body -->
+        </div>
+    </section>
+</div>
+{% endblock %}

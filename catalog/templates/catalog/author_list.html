@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="row">
+    <section class="main-col col col-sm-8">
+        <h2 class="h4">List of Authors</h2>
+
+        <ul>
+            {% for author in author_list %}
+            <li><a href="#">
+            {{ author.last_name|capfirst }}, {{ author.first_name|capfirst }} &nbsp; - ({{ author.date_of_birth|date:'Y'}} - {{ author.date_of_death|date:'Y'}})
+            </a></li>
+            {% endfor %}
+        </ul>
+
+        {% if is_paginated %}
+        <div class="pagination-container">
+            <ul class="list-inline">
+                {% for page in page_obj.paginator.page_range %}
+                <li {% if page_obj.number == page %} class="active" {% endif %}>
+                <a href="{{ request.path }}?page={{ page }}">{{ page }}</a>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </section> 
+</div>
+{% endblock main %}

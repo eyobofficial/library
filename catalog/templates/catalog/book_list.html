@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<div class="row">
+    <section class="col-sm-8 col col-left">
+        <article>
+            <h2>Book List</h2>
+
+            <ul class="list-unstyled">
+                {% for book in book_list %}
+                <li><a href="{% url 'catalog:book_detail' book.id %}">{{ book.title|capfirst }}</a> - <em>{{ book.author|capfirst}}</em></li>
+                {% endfor %}
+            </ul>
+        </article>
+    </section>
+</div><!-- /END .row -->
+{% endblock %}

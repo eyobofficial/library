@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}<title>{{ book.title|capfirst }} - Local Library</title>{% endblock title %}
+
+{% block main %}
+<article>
+    <h2 class="text-capitalize">Title: {{ book.title|capfirst }}</h2>
+
+    <p><strong>Author: </strong>{{ book.author|capfirst }}</p>
+    <p><strong>ISBN: </strong>{{ book.isbn }}</p>
+    <p><strong>Genre: </strong>{% for genre in book.genre.all %} {{ genre.name }}{% if not forloop.last %}, {% endif %} {% endfor %}</p>
+    <p><strong>Summary: </strong>{{ book.summary|capfirst }}</p>
+
+    <h3>Book Copies</h3>
+
+    {% for copy in book.bookinstance_set.all %}
+    <div class='copy-detail'>
+        <p class="text-info"><em>{{ copy.get_status_display }}</em></p>
+        <p><strong>ID: </strong>{{ copy.id }}</p>
+    </div>
+    <hr>
+    {% endfor %}
+</article>
+{% endblock %}
