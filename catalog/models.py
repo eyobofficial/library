@@ -38,7 +38,7 @@ class Book(models.Model):
         """
         Returns the url to access a particular book instance
         """
-        return reverse('book-detail', {'pk': self.pk})
+        return reverse('catalog:book-detail', kwargs={'pk': self.pk})
 
 class BookInstance(models.Model):
     """
@@ -99,7 +99,7 @@ class Author(models.Model):
         """
         Returns the url to access a particular author
         """
-        return reverse('author-detail', args=[str(self.id)])
+        return reverse('catalog:author_detail', kwargs={'pk': str(self.pk)})
 
     def __str__(self):
         """

@@ -15,6 +15,7 @@
                 <p><strong>Copy ID: </strong> {{ copy.id }}</p>
                 <p><strong>Due Back: </strong>{% if copy.is_overdue %} <span class="text-danger">OVERDUE</span>{% else %} {{ copy.due_back|date:'M d, Y' }} {% endif %}</p>
                 <p><strong>Borrowed By: </strong>{{ copy.borrower.username|capfirst }}</p>
+                <p><a href="{% url 'catalog:renew_book' copy.id %}" class="btn btn-sm btn-primary">Renew</a></p>
             </div>
         </div>
     </div><!-- /.col-sm-4 -->

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+<div class="row">
+    <div class="col-sm-5 col-sm-offset-3">
+        <div class="panel panel-success">
+            <div class="panel-heading">Update Author</div>
+            <div class="panel-body">
+                <form action="" method="POST">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="form-group">
+                        <input type="submit" name="submit" value="Update" class="btn btn-success btn-block">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block main %}
+<h4>{{ author.full_name }}</h4>
+<p><strong>Date of Birth: </strong>{{ author.date_of_birth|date:"M d, Y" }}</p>
+<p><strong>Date of Death: </strong>{{ author.date_of_death|date:"M d, Y" }}</p>
+<br>
+
+{% if perms.catalog.return_bookinstance %}
+<a href="{% url 'catalog:delete_author' author.id %}" class="btn btn-sm btn-danger">Delete</a>
+{% endif %}
+{% endblock %}

@@ -5,11 +5,26 @@
     <section class="main-col col col-sm-8">
         <h2 class="h4">List of Authors</h2>
 
+        <div>
+            {% if perms.catalog.return_bookinstance %}
+            <a href="{% url 'catalog:add_author' %}" class="btn btn-success btn-sm">Add Author</a>
+            {% endif %}
+        </div>
+        
+        <br>
+        
         <ul>
             {% for author in author_list %}
-            <li><a href="#">
-            {{ author.last_name|capfirst }}, {{ author.first_name|capfirst }} &nbsp; - ({{ author.date_of_birth|date:'Y'}} - {{ author.date_of_death|date:'Y'}})
-            </a></li>
+            <li>
+                <a href="{% url 'catalog:author_detail' author.id %}">
+                {{ author.last_name|capfirst }}, {{ author.first_name|capfirst }} &nbsp; - ({{ author.date_of_birth|date:'Y'}} - {{ author.date_of_death|date:'Y'}})
+                </a>
+
+                &nbsp;
+                {% if perms.catalog.return_bookinstance %}
+                <strong class="text-danger"><a href="{% url 'catalog:update_author' author.id %}">Edit</a></strong>
+                {% endif %}
+            </li>
             {% endfor %}
         </ul>
 

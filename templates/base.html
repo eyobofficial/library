@@ -30,8 +30,7 @@
 
                      <li {% if page_title == 'About' %} class="active" {% endif %}><a href="{% url 'catalog:about' %}">About Us</a></li>
 
-                     <li {% if page_title == 'Contact' %} class="active" {% endif %}><a href="{% url 'catalog:contact' %}">Contact Us</a></li>
-
+                     
                      {% if user.is_authenticated %}
                          {% if perms.catalog.return_bookinstance %}
                          <li {% if page_title == 'All Borrowed Books' %} class="active" {% endif %}>
@@ -59,7 +58,8 @@
             {% endif %}
             <li><a href="{% url 'logout' %}?next={{ request.path }}">Logout</a></li>
             {% else %}
-            <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li>
+            <li><a href="{% url 'login' %}?next={{ request.path }}">Login</a></li> | 
+            <li><a href="{% url 'catalog:registeration' %}?next={{ request.path }}">Register</a></li>
             {% endif %}
         </ul>
     </nav>

@@ -1,11 +1,17 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
+from django.views.generic.edit import FormView, CreateView, UpdateView, DeleteView
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin, UserPassesTestMixin
 from django.contrib.auth.models import Group
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth import authenticate, login
+from django.urls import reverse_lazy
 from .models import Book, BookInstance, Genre, Author, Language
-from .forms import ContactUsForm
+from .forms import RenewalForm
+
+import datetime
 
 def index(request):
     """
@@ -65,6 +71,14 @@ class AuthorListView(generic.ListView):
         Returns the page title to the template along side the context data
         """
         context = super(AuthorListView, self).get_context_data()
+        context['page_title'] = 'Authors'
+        return context
+
+class AuthorDetailView(generic.DetailView):
+    model = Author 
+
+    def get_context_data(self, *args, **kwargs):
+        context = super(AuthorDetailView, self).get_context_data()
         context['page_title'] = 'Authors'
         return context
 
@@ -137,3 +151,89 @@ class AboutView(generic.TemplateView):
         context = super(AboutView, self).get_context_data()
         context['page_title'] = 'About'
         return context
+
+class AddAuthorView(PermissionRequiredMixin, CreateView):
+    permission_required = ('catalog.return_bookinstance')
+    template_name = 'catalog/add_author.html'
+    success_url = '/catalog/authors/'
+    model = Author
+    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
+
+
+class UpdateAuthorView(PermissionRequiredMixin, UpdateView):
+    permission_required = 'catalog.return_bookinstance'
+    template_name = 'catalog/edit_author.html'
+    success_url = '/catalog/authors/'
+    model = Author
+    fields = ['first_name', 'last_name', 'date_of_birth', 'date_of_death']
+
+    def get_context_data(self):
+        context = super(UpdateAuthorView, self).get_context_data()
+        context['page_title'] = 'Authors'
+        return context 
+
+class RegisterationView(FormView):
+    form_class = UserCreationForm
+    template_name = 'catalog/register.html'
+    success_url = '/catalog/'
+
+        
+    def get(self, *args, **kwargs):      
+        if self.request.user.is_authenticated:
+            return redirect('catalog:index')
+        return super(RegisterationView, self).get(*args, **kwargs)
+
+    def form_valid(self, form):
+        form.save()
+        username = form.cleaned_data.get('username')
+        password = form.cleaned_data.get('password1')
+
+        user = authenticate(username=username, password=password)
+
+        if user is not None and user.is_active:
+            login(self.request, user)
+            return redirect('catalog:index')
+        return super(RegisterationView, self).form_valid(form)
+
+@permission_required('catalog.return_bookinstance')
+def renew_book(request, pk):
+    """
+    Renew borrowed bookInstance due_back
+    """
+    form_class = RenewalForm
+    template_name = 'catalog/book_renewal.html'
+    book_copy = get_object_or_404(BookInstance, pk=pk)
+
+    if request.method == 'POST':
+        form = form_class(request.POST)
+
+        if form.is_valid():
+            renewal_date = form.cleaned_data['renewal_date']
+            book_copy.due_back = renewal_date
+            book_copy.save()
+
+            return redirect('/catalog/borrowed/')
+    else:
+        proposed_renewal_date = datetime.date.today() + datetime.timedelta(weeks=3)
+        form = form_class(initial={'renewal_date': proposed_renewal_date})
+    return render(request, template_name, {
+           'form': form,
+           'copy': book_copy,
+           })
+
+class AuthorCreate(PermissionRequiredMixin, CreateView):
+    permission_required = (('catalog.return_bookinstance'),)
+    model = Author 
+    fields = '__all__'
+    template_name_suffix = '_create' 
+
+class AuthorUpdate(PermissionRequiredMixin, UpdateView):
+    permission_required = (('catalog.return_bookinstance'),)
+    model = Author
+    fields = '__all__'
+    template_name_suffix = '_update'
+
+class AuthorDelete(PermissionRequiredMixin, DeleteView):
+    permission_required = 'catalog.return_bookinstance'
+    model = Author 
+    success_url = reverse_lazy('catalog:author_list')

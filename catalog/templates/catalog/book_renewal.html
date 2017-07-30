@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+<div class="row">
+    <div class="col-sm-4 col-sm-offset-4">
+        <h2 class="h4">RENEW BOOK COPY</h2>
+
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                {{ copy.book.title|capfirst }}
+            </div>
+
+            <div class="panel-body">
+                <p><strong>Copy id: </strong> {{ copy.id }}</p>
+                <p><strong>Due Back: </strong> {{ copy.due_back|date:'Y-m-d' }}</p>
+
+                <hr>
+                <h4>Renew Book</h4>
+                {{ form.non_field_errors }}
+                <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                        <input type="text" class="form-control" name="renewal_date" id="renwal-date" placeholder="yyyy-mm-dd" value="{{ form.renewal_date.initial|date:'Y-m-d' }}">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success">Renew</button>
+                        </span>
+                    </div><!-- /END .input-group-addon -->
+                    {{ form.renewal_date.errors }}
+                </div><!-- /END .form-group -->
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock main %}

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block main %}
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <p>Are you sure you want to delete this author?</p>
+        <form method="POST">
+        {% csrf_token%}
+        <input type="submit" name="submit" value="Delete" class="btn btn-danger btn-sm">
+        </form>
+    </div>
+</div>
+{% endblock main %}
